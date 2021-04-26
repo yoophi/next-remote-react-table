@@ -32,6 +32,8 @@ export default function Home() {
   const [filters, setFilters] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const [pageCount, setPageCount] = React.useState(0);
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(10);
 
   const fetchData = React.useCallback(
     ({ pageSize, pageIndex }) => {
@@ -71,12 +73,17 @@ export default function Home() {
   );
 
   useEffect(() => {
-    fetchData(pageCount, 1);
+    setPageIndex(0);
+    fetchData({
+      pageSize: pageSize,
+      pageIndex: 0,
+    });
   }, [filters]);
 
   return (
     <>
       <pre>{JSON.stringify({ filters }, null, 2)}</pre>
+      <pre>{JSON.stringify({ pageCount, pageSize }, null, 2)}</pre>
       <SearchForm filters={filters} setFilters={setFilters} />
       <Table
         columns={columns}
@@ -84,7 +91,31 @@ export default function Home() {
         fetchData={fetchData}
         loading={loading}
         pageCount={pageCount}
+        controlledPageIndex={pageIndex}
+        setControlledPage={setPageIndex}
+        controlledPageSize={pageSize}
+        setControlledPageSize={setPageSize}
       />
+      <hr />
+      <div>
+        <h3>Controlled PageIndex block</h3>
+        <div>
+          <button
+            onClick={() => {
+              setPageIndex(pageIndex + 1);
+            }}
+          >
+            next page
+          </button>
+          <button
+            onClick={() => {
+              setPageSize(20);
+            }}
+          >
+            setPageSize(20)
+          </button>
+        </div>
+      </div>
     </>
   );
 }

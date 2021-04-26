@@ -1,6 +1,5 @@
+import React, { useCallback, useEffect, useMemo } from "react";
 import { usePagination, useTable } from "react-table";
-
-import React from "react";
 
 export function Table({
   columns,
@@ -8,6 +7,10 @@ export function Table({
   fetchData,
   loading,
   pageCount: controlledPageCount,
+  controlledPageSize,
+  setControlledPageSize,
+  controlledPageIndex,
+  setControlledPage,
 }) {
   const {
     getTableProps,
@@ -19,10 +22,6 @@ export function Table({
     canNextPage,
     pageOptions,
     pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
     // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable(
@@ -35,14 +34,46 @@ export function Table({
       // This means we'll also have to provide our own
       // pageCount.
       pageCount: controlledPageCount,
+      useControlledState: (state) => {
+        return useMemo(
+          () => ({
+            ...state,
+            pageIndex: controlledPageIndex,
+            pageSize: controlledPageSize,
+          }),
+          [state, controlledPageIndex, controlledPageSize]
+        );
+      },
     },
     usePagination
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData({ pageIndex, pageSize });
   }, [fetchData, pageIndex, pageSize]);
+  useEffect(() => {
+    setControlledPageSize(pageSize);
+  }, [setControlledPageSize, pageSize]);
+
+  const gotoPage = useCallback((page) => {
+    setControlledPage(page);
+  }, []);
+  const nextPage = useCallback(() => {
+    setControlledPage(pageIndex + 1);
+  }, [pageIndex]);
+  const previousPage = useCallback(() => {
+    setControlledPage(pageIndex - 1);
+  }, [pageIndex]);
+  const setPageSize = useCallback(
+    (newPageSize) => {
+      setControlledPageSize(newPageSize);
+      if (pageSize !== newPageSize) {
+        setControlledPage(0);
+      }
+    },
+    [pageSize, setControlledPage, setControlledPageSize]
+  );
 
   // Render the UI for your table
   return (
@@ -107,7 +138,7 @@ export function Table({
           </tr>
         </tbody>
       </table>
-      {/* 
+      {/*
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
