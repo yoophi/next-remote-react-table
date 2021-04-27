@@ -22,7 +22,10 @@ const parseFilters = (filters) => {
 
 const parseSort = (sort) => {
   if (!sort || typeof sort !== "string") {
-    return {};
+    return {
+      key: "id",
+      ascending: "asc",
+    };
   }
 
   const result = {};
@@ -63,7 +66,13 @@ const getSortedTodos = (todos, sort) => {
 
   return todos.sort((a, b) => {
     const direction = sort.ascending ? 1 : -1;
-    if (sort.key === "userId") {
+    if (sort.key === "id") {
+      if (a.id === b.id) {
+        return 0;
+      }
+
+      return direction * (a.id > b.id ? 1 : -1);
+    } else if (sort.key === "userId") {
       if (a.userId === b.userId) {
         return 0;
       }

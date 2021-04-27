@@ -11,14 +11,17 @@ export default function Home() {
       {
         Header: "Id",
         accessor: "id",
+        sortable: true,
       },
       {
         Header: "Title",
         accessor: "title",
+        sortable: true,
       },
       {
         Header: "User",
         accessor: "userId",
+        sortable: true,
       },
       {
         Header: "Completed",
@@ -34,6 +37,7 @@ export default function Home() {
   const [pageCount, setPageCount] = React.useState(0);
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
+  const [sortBy, setSortBy] = React.useState({});
 
   const fetchData = React.useCallback(
     ({ pageSize, pageIndex }) => {
@@ -57,6 +61,10 @@ export default function Home() {
         params.filters = paramsArray.join(",");
       }
 
+      if (sortBy.key) {
+        params.sort = `${sortBy.key}:${sortBy.direction}`;
+      }
+
       const queryString = qs.stringify(params);
       axios
         .get(`/api/todos?${queryString}`)
@@ -69,7 +77,7 @@ export default function Home() {
           setLoading(false);
         });
     },
-    [filters]
+    [filters, sortBy]
   );
 
   useEffect(() => {
@@ -78,12 +86,12 @@ export default function Home() {
       pageSize: pageSize,
       pageIndex: 0,
     });
-  }, [filters]);
+  }, [filters, sortBy]);
 
   return (
     <>
       <pre>{JSON.stringify({ filters }, null, 2)}</pre>
-      <pre>{JSON.stringify({ pageCount, pageSize }, null, 2)}</pre>
+      <pre>{JSON.stringify({ pageCount, pageSize, sortBy }, null, 2)}</pre>
       <SearchForm filters={filters} setFilters={setFilters} />
       <Table
         columns={columns}
@@ -95,6 +103,8 @@ export default function Home() {
         setControlledPage={setPageIndex}
         controlledPageSize={pageSize}
         setControlledPageSize={setPageSize}
+        controlledSortBy={sortBy}
+        setControlledSortBy={setSortBy}
       />
       <hr />
       <div>
@@ -113,6 +123,14 @@ export default function Home() {
             }}
           >
             setPageSize(20)
+          </button>
+          <button
+            onClick={() => {
+              setPageIndex(0);
+              fetchData(pageSize, pageIndex);
+            }}
+          >
+            fetchData()
           </button>
         </div>
       </div>

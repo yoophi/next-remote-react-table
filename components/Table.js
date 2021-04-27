@@ -11,6 +11,8 @@ export function Table({
   setControlledPageSize,
   controlledPageIndex,
   setControlledPage,
+  controlledSortBy,
+  setControlledSortBy,
 }) {
   const {
     getTableProps,
@@ -100,6 +102,20 @@ export function Table({
               {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>
                   {column.render("Header")}
+                  {column.sortable ? (
+                    <div>
+                      <button
+                        onClick={() => {
+                          setControlledSortBy({
+                            key: column.id,
+                            direction: "asc",
+                          });
+                        }}
+                      >
+                        sort
+                      </button>
+                    </div>
+                  ) : null}
                   <span>
                     {column.isSorted
                       ? column.isSortedDesc
