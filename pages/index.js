@@ -61,8 +61,9 @@ export default function Home() {
         params.filters = paramsArray.join(",");
       }
 
-      if (sortBy.key) {
-        params.sort = `${sortBy.key}:${sortBy.direction}`;
+      if (sortBy.length) {
+        const { id, desc } = sortBy[0]
+        params.sort = `${id}:${desc ? 'desc' : 'asc'}`;
       }
 
       const queryString = qs.stringify(params);
