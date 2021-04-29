@@ -31,7 +31,7 @@ export function Table({
       data,
       initialState: { pageIndex: 0 }, // Pass our hoisted table state
       manualPagination: true, // Tell the usePagination
-      manualSortBy: true, 
+      manualSortBy: true,
       // hook that we'll handle our own data fetching
       // This means we'll also have to provide our own
       // pageCount.
@@ -59,8 +59,8 @@ export function Table({
     setControlledPageSize(pageSize);
   }, [setControlledPageSize, pageSize]);
   useEffect(() => {
-    setControlledSortBy(sortBy)
-  }, [sortBy])
+    setControlledSortBy(sortBy);
+  }, [sortBy]);
 
   const gotoPage = useCallback((page) => {
     setControlledPage(page);
@@ -104,7 +104,11 @@ export function Table({
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.sortable && column.getSortByToggleProps())}>
+                <th
+                  {...column.getHeaderProps(
+                    column.sortable && column.getSortByToggleProps()
+                  )}
+                >
                   {column.render("Header")}
                   <span>
                     {column.isSorted
