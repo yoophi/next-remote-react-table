@@ -82,6 +82,10 @@ export default function Home() {
   );
 
   useEffect(() => {
+    fetchData({ pageIndex, pageSize });
+  }, [pageIndex, pageSize]);
+
+  useEffect(() => {
     setPageIndex(0);
     fetchData({
       pageSize: pageSize,
@@ -97,7 +101,6 @@ export default function Home() {
       <Table
         columns={columns}
         data={data}
-        fetchData={fetchData}
         loading={loading}
         pageCount={pageCount}
         controlledPageIndex={pageIndex}

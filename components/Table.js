@@ -4,7 +4,6 @@ import { usePagination, useSortBy, useTable } from "react-table";
 export function Table({
   columns,
   data,
-  fetchData,
   loading,
   pageCount: controlledPageCount,
   controlledPageSize,
@@ -51,10 +50,6 @@ export function Table({
     usePagination
   );
 
-  // Listen for changes in pagination and use the state to fetch our new data
-  useEffect(() => {
-    fetchData({ pageIndex, pageSize });
-  }, [fetchData, pageIndex, pageSize]);
   useEffect(() => {
     setControlledPageSize(pageSize);
   }, [setControlledPageSize, pageSize]);
