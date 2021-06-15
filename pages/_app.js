@@ -1,8 +1,18 @@
+import {QueryClient, QueryClientProvider} from "react-query";
+import {wrapper} from "../store/configureStore";
 import "../styles/globals.css";
-import { wrapper } from "../store/configureStore";
+import {ReactQueryDevtools} from 'react-query/devtools'
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+
+const queryClient = new QueryClient();
+
+function MyApp({Component, pageProps}) {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+            <ReactQueryDevtools initialIsOpen={false}/>
+        </QueryClientProvider>
+    );
 }
 
 export default wrapper.withRedux(MyApp);
