@@ -10,7 +10,9 @@ export function Table({
   setControlledPageSize,
   controlledPageIndex,
   setControlledPage,
+  controlledSortBy,
   setControlledSortBy,
+  debug = false,
 }) {
   const {
     getTableProps,
@@ -41,6 +43,7 @@ export function Table({
             ...state,
             pageIndex: controlledPageIndex,
             pageSize: controlledPageSize,
+            sortBy: controlledSortBy,
           }),
           [state, controlledPageIndex, controlledPageSize]
         );
@@ -79,21 +82,23 @@ export function Table({
   // Render the UI for your table
   return (
     <>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
+      {debug && (
+        <pre>
+          <code>
+            {JSON.stringify(
+              {
+                pageIndex,
+                pageSize,
+                pageCount,
+                canNextPage,
+                canPreviousPage,
+              },
+              null,
+              2
+            )}
+          </code>
+        </pre>
+      )}
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
